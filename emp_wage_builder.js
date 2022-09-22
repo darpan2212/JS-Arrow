@@ -11,6 +11,8 @@ let totalWorkingDays = 0;
 let empDailyWageMap = new Map();
 let empWorkingHrMap = new Map();
 
+let empDailyWageArr = new Array();
+
 function calculateDailyWage(empHr) {
     return empHr * WAGE_PER_HOUR;
 }
@@ -37,6 +39,14 @@ while (totalEmpHr <= MAX_HOUR_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS
 
     empDailyWageMap.set(totalWorkingDays, calculateDailyWage(empHr));
     empWorkingHrMap.set(totalWorkingDays, empHr);
+
+    empDailyWageArr.push(
+        {
+            dayNum: totalWorkingDays,
+            workHr: empHr,
+            wage: calculateDailyWage(empHr)
+        }
+    );
 }
 
 for ([key, value] of empDailyWageMap) {
@@ -70,3 +80,15 @@ empWorkingHrMap.forEach((value, key) => {
 console.log("Non working days : " + nonWorkingDays);
 console.log("Part time working days : " + partTimeWorkingDay);
 console.log("Full time working days : " + fullTimeWorkingDay);
+
+
+console.log("-------------------------------------------------------");
+
+let dailyWageSum = (prev, arrObj) => prev + arrObj.wage;
+let workingHrSum = (prev, arrObj) => prev + arrObj.workHr;
+
+let totalWageWithArr = empDailyWageArr.filter((obj) => obj.wage > 0).reduce(dailyWageSum, 0);
+console.log("Employee monthly wage (with array) : $" + totalWageWithArr + " USD");
+
+let totalWorkingHrWithArr = empDailyWageArr.filter((obj) => obj.workHr > 0).reduce(workingHrSum, 0);
+console.log("Employee's total working hour (with array) : " + totalWorkingHrWithArr + " HOUR");
